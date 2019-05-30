@@ -35,6 +35,7 @@ using System.IO;
 using System.Data.Common;
 using System.Text;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace System.Data.SQLite
 {
@@ -227,10 +228,10 @@ namespace System.Data.SQLite
 #if !(SQLITE_SILVERLIGHT || WINDOWS_MOBILE)
 							}
 							else if(tvalue_lc.StartsWith("|DataDirectory|", StringComparison.InvariantCultureIgnoreCase))
-							{
-								AppDomainSetup ads = AppDomain.CurrentDomain.SetupInformation;
-								string filePath = String.Format("App_Data{0}{1}", Path.DirectorySeparatorChar, tvalue_lc.Substring(15));
-								db_file = Path.Combine(ads.ApplicationBase, filePath);
+                            {
+                                var applicationPath = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? "";
+                                string filePath = String.Format("App_Data{0}{1}", Path.DirectorySeparatorChar, tvalue_lc.Substring(15));
+								db_file = Path.Combine(applicationPath, filePath);
 #endif
 							}
 							else
